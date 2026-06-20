@@ -1,0 +1,174 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================================
+   PALAKATA ALIM MADRASAH — Design System (Tailwind v4)
+   Palette + fonts derived from the project wireframe.
+   ============================================================ */
+
+:root {
+  /* Brand palette */
+  --green-dark: #0f3a2e;
+  --green-mid: #155441;
+  --green-accent: #1f6b54;
+  --gold: #d4b87c;
+  --gold-dark: #a07830;
+  --orange: #ee7c2d;
+  --orange-hover: #d96914;
+  --cream: #fdfaf0;
+  --paper: #ffffff;
+  --ink: #1f2937;
+  --muted-ink: #6b7280;
+  --line: #e5e7eb;
+  --notice-blue: #e8f4fa;
+  --pattern-blue: #dbe7f0;
+  --page-bg: #f3f7fb;
+
+  /* shadcn/ui semantic tokens (light) */
+  --radius: 0.5rem;
+  --background: #f3f7fb;
+  --foreground: #1f2937;
+  --card: #ffffff;
+  --card-foreground: #1f2937;
+  --popover: #ffffff;
+  --popover-foreground: #1f2937;
+  --primary: #0f3a2e;
+  --primary-foreground: #ffffff;
+  --secondary: #eef3f8;
+  --secondary-foreground: #0f3a2e;
+  --muted: #eef3f8;
+  --muted-foreground: #6b7280;
+  --accent: #f1f5f9;
+  --accent-foreground: #0f3a2e;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: #e5e7eb;
+  --input: #e5e7eb;
+  --ring: #155441;
+}
+
+@theme inline {
+  /* Brand colors → utilities like bg-green-dark, text-gold, border-line */
+  --color-green-dark: var(--green-dark);
+  --color-green-mid: var(--green-mid);
+  --color-green-accent: var(--green-accent);
+  --color-gold: var(--gold);
+  --color-gold-dark: var(--gold-dark);
+  --color-orange: var(--orange);
+  --color-orange-hover: var(--orange-hover);
+  --color-cream: var(--cream);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-muted-ink: var(--muted-ink);
+  --color-line: var(--line);
+  --color-notice-blue: var(--notice-blue);
+  --color-pattern-blue: var(--pattern-blue);
+
+  /* shadcn semantic tokens */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* Font families (loaded via <link> in layout head) */
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Cinzel", serif;
+  --font-bangla: "Hind Siliguri", sans-serif;
+  --font-arabic: "Noto Naskh Arabic", "Amiri", serif;
+
+  /* Notice ticker animation */
+  --animate-ticker: ticker 35s linear infinite;
+  @keyframes ticker {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    height: 100%;
+  }
+
+  body {
+    @apply text-foreground;
+    min-height: 100%;
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    background-color: var(--page-bg);
+    /* Subtle Islamic geometric pattern (light) — from wireframe */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='none' stroke='%23c7d6e3' stroke-width='0.8' opacity='0.55'%3E%3Cpath d='M30 8 L30 52 M8 30 L52 30 M15 15 L45 45 M45 15 L15 45'/%3E%3Ccircle cx='30' cy='30' r='3'/%3E%3Cpath d='M30 12 L32 18 L30 16 L28 18 Z M30 48 L32 42 L30 44 L28 42 Z M12 30 L18 32 L16 30 L18 28 Z M48 30 L42 32 L44 30 L42 28 Z'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* Bengali mode swaps the global UI font to Hind Siliguri */
+  html[data-lang="bn"] body {
+    font-family: var(--font-bangla);
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: 0.02em;
+  }
+  html[data-lang="bn"] .font-display {
+    font-family: var(--font-bangla);
+    letter-spacing: 0;
+  }
+  .font-bangla {
+    font-family: var(--font-bangla);
+  }
+  .font-arabic {
+    font-family: var(--font-arabic);
+    direction: rtl;
+    font-weight: 600;
+  }
+
+  /* Reusable Islamic geometric overlay for dark green bands */
+  .pattern-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23d4b87c' stroke-width='0.5' opacity='0.15'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40 Z'/%3E%3Cpath d='M40 20 L60 40 L40 60 L20 40 Z'/%3E%3C/g%3E%3C/svg%3E");
+  }
+}
+
+/* Print: hide chrome, keep only printable cards */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff !important;
+  }
+}

@@ -1,0 +1,188 @@
+// Palakata Alim Madrasah — Prisma schema (spec §5)
+// After editing run: npx prisma db push  (requires DATABASE_URL)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Auth / User accounts ─────────────────────────────────────────
+model User {
+  id                 String   @id @default(cuid())
+  username           String   @unique // login identifier — NOT email
+  password           String // bcrypt hashed — never plain text
+  role               UserRole
+  nameEn             String
+  nameBn             String?
+  isActive           Boolean  @default(true) // can be toggled at any time
+  mustChangePassword Boolean  @default(false) // true for auto-generated passwords
+  createdBy          String? // userId of whoever created this account
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+enum UserRole {
+  PRINCIPAL // Super admin — can create max 2 ADMIN accounts
+  ADMIN // Can create TEACHER & STUDENT accounts, manage all content
+  TEACHER // Can enter results for own classes only
+  STUDENT // Can view own results, attendance, fees
+}
+
+// ─────────────────────────────────────────────────────────────────
+
+model Student {
+  id            String     @id @default(cuid())
+  rollNumber    String     @unique
+  nameEn        String
+  nameBn        String
+  fatherNameEn  String
+  fatherNameBn  String
+  motherNameEn  String?
+  motherNameBn  String?
+  classLevel    ClassLevel
+  section       String?
+  admissionYear Int
+  dateOfBirth   DateTime
+  phone         String?
+  guardianPhone String?
+  address       String?
+  photoUrl      String? // Cloudflare R2 URL
+  password      String // bcrypt hashed — set by admin, reset by admin
+  isActive      Boolean    @default(true) // admin can disable login
+  results       Result[]
+  fees          Fee[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model Teacher {
+  id            String    @id @default(cuid())
+  nameEn        String
+  nameBn        String
+  designation   String
+  department    String
+  qualification String?
+  experience    Int? // years
+  phone         String?
+  email         String?
+  photoUrl      String? // Cloudflare R2 URL
+  joinDate      DateTime?
+  isActive      Boolean   @default(true)
+  sortOrder     Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Result {
+  id            String     @id @default(cuid())
+  student       Student    @relation(fields: [studentId], references: [id])
+  studentId     String
+  classLevel    ClassLevel
+  section       String?
+  term          Term
+  year          Int
+  subject       String
+  fullMarks     Float      @default(100)
+  obtainedMarks Float?
+  grade         String? // A+, A, A-, B, C, D, F
+  gpa           Float?
+  isPassed      Boolean    @default(true)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+// ── Finance Module ────────────────────────────────────────────────
+model Fee {
+  id          String    @id @default(cuid())
+  student     Student   @relation(fields: [studentId], references: [id])
+  studentId   String
+  type        FeeType
+  amount      Float
+  month       String? // "2026-01" — for monthly fees only
+  year        Int
+  description String?
+  isPaid      Boolean   @default(false)
+  paidAt      DateTime?
+  dueDate     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+enum FeeType {
+  MONTHLY // Monthly tuition fee
+  ADMISSION // One-time admission fee
+  EXAM_FEE // Per-term exam fee
+  OTHER // Any other charge
+}
+
+// ─────────────────────────────────────────────────────────────────
+
+model Notice {
+  id          String   @id @default(cuid())
+  titleEn     String
+  titleBn     String
+  contentEn   String?  @db.Text
+  contentBn   String?  @db.Text
+  fileUrl     String? // Cloudflare R2 URL (PDF attachment)
+  isPublished Boolean  @default(true)
+  isPinned    Boolean  @default(false)
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+}
+
+model Event {
+  id            String   @id @default(cuid())
+  titleEn       String
+  titleBn       String
+  descriptionEn String?  @db.Text
+  descriptionBn String?  @db.Text
+  eventDate     DateTime
+  location      String?
+  isPublished   Boolean  @default(true)
+  createdAt     DateTime @default(now())
+}
+
+model GalleryImage {
+  id          String   @id @default(cuid())
+  captionEn   String?
+  captionBn   String?
+  imageUrl    String // Cloudflare R2 URL
+  category    String   @default("general")
+  sortOrder   Int      @default(0)
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+model Achievement {
+  id            String   @id @default(cuid())
+  titleEn       String
+  titleBn       String
+  descriptionEn String?
+  descriptionBn String?
+  year          Int
+  createdAt     DateTime @default(now())
+}
+
+enum ClassLevel {
+  EBTEDAYEE_1
+  EBTEDAYEE_2
+  EBTEDAYEE_3
+  EBTEDAYEE_4
+  EBTEDAYEE_5
+  DAKHIL_6
+  DAKHIL_7
+  DAKHIL_8
+  DAKHIL_9
+  DAKHIL_10
+  ALIM_11
+  ALIM_12
+}
+
+enum Term {
+  FIRST
+  SECOND
+}
