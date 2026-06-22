@@ -7,26 +7,46 @@ import { DatedList } from "@/components/content/dated-list";
 import { useLang } from "@/components/i18n/language-provider";
 import { notices } from "@/lib/sample-data";
 
-const RESULTS = [
+export interface StudentData {
+  classEn: string;
+  classBn: string;
+  section: string | null;
+  fatherEn: string;
+  fatherBn: string;
+  results: { subject: string; full: number; obtained: number | null; grade: string | null }[];
+  gpa: number;
+  fees: { en: string; bn: string; amount: number; paid: boolean }[];
+}
+
+// Demo data shown when there is no DB-backed student record yet.
+const DEMO_RESULTS = [
   { subjectEn: "Qur'an Majeed", subjectBn: "কুরআন মাজীদ", full: 100, obtained: 92, grade: "A+" },
   { subjectEn: "Arabic 1st Paper", subjectBn: "আরবি ১ম পত্র", full: 100, obtained: 85, grade: "A+" },
   { subjectEn: "Aqaid & Fiqh", subjectBn: "আকাইদ ও ফিকহ", full: 100, obtained: 88, grade: "A+" },
   { subjectEn: "Bangla", subjectBn: "বাংলা", full: 100, obtained: 78, grade: "A" },
   { subjectEn: "English", subjectBn: "ইংরেজি", full: 100, obtained: 72, grade: "A-" },
-  { subjectEn: "Mathematics", subjectBn: "গণিত", full: 100, obtained: 80, grade: "A" },
 ];
 
-const FEES = [
+const DEMO_FEES = [
   { en: "Monthly Tuition — June 2026", bn: "মাসিক বেতন — জুন ২০২৬", amount: 500, paid: true },
-  { en: "Monthly Tuition — July 2026", bn: "মাসিক বেতন — জুলাই ২০২৬", amount: 500, paid: false, due: "2026-07-10" },
+  { en: "Monthly Tuition — July 2026", bn: "মাসিক বেতন — জুলাই ২০২৬", amount: 500, paid: false },
   { en: "Half-Yearly Exam Fee", bn: "অর্ধবার্ষিক পরীক্ষার ফি", amount: 300, paid: true },
 ];
 
-export function StudentPortal({ name, username }: { name: string; username: string }) {
+export function StudentPortal({
+  name,
+  username,
+  data,
+}: {
+  name: string;
+  username: string;
+  data?: StudentData | null;
+}) {
   const { t, num } = useLang();
 
-  const totalPaid = FEES.filter((f) => f.paid).reduce((s, f) => s + f.amount, 0);
-  const totalDue = FEES.filter((f) => !f.paid).reduce((s, f) => s + f.amount, 0);
+  const fees = data ? data.fees : DEMO_FEES;
+  const totalPaid = fees.filter((f) => f.paid).reduce((s, f) => s + f.amount, 0);
+  const totalDue = fees.filter((f) => !f.paid).reduce((s, f) => s + f.amount, 0);
 
   return (
     <div className="space-y-6">
@@ -41,9 +61,18 @@ export function StudentPortal({ name, username }: { name: string; username: stri
             <p className="text-sm text-white/80">
               {t("Roll", "রোল")}: {username}
             </p>
-            <p className="mt-1 text-xs text-white/60">
-              {t("[UPDATE: class, section, father/mother name from database]", "[UPDATE: ডাটাবেস থেকে শ্রেণি, শাখা, পিতা/মাতার নাম]")}
-            </p>
+            {data ? (
+              <p className="mt-1 text-xs text-white/70">
+                {t(data.classEn, data.classBn)}
+                {data.section ? ` · ${t("Section", "শাখা")} ${data.section}` : ""}
+                {" · "}
+                {t("Father", "পিতা")}: {t(data.fatherEn, data.fatherBn)}
+              </p>
+            ) : (
+              <p className="mt-1 text-xs text-white/60">
+                {t("Showing demo data — full profile loads from the database.", "ডেমো ডেটা — সম্পূর্ণ প্রোফাইল ডাটাবেস থেকে আসবে।")}
+              </p>
+            )}
           </div>
         </div>
       </section>
@@ -54,7 +83,7 @@ export function StudentPortal({ name, username }: { name: string; username: stri
           <h2 className="text-[15px] font-semibold text-ink">{t("My Results", "আমার ফলাফল")}</h2>
           <div className="flex items-center gap-3">
             <span className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-br from-green-dark to-green-mid px-3 py-1.5 text-sm font-bold text-gold">
-              {t("GPA", "জিপিএ")} {num("4.75")}
+              {t("GPA", "জিপিএ")} {num(data ? data.gpa.toFixed(2) : "4.75")}
             </span>
             <Button variant="outline" size="sm" onClick={() => window.print()} className="no-print">
               <Printer className="size-4" strokeWidth={1.5} />
@@ -62,28 +91,44 @@ export function StudentPortal({ name, username }: { name: string; username: stri
             </Button>
           </div>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-secondary text-left text-xs uppercase tracking-wide text-muted-ink">
-                <th className="px-4 py-2.5">{t("Subject", "বিষয়")}</th>
-                <th className="px-4 py-2.5 text-center">{t("Full", "পূর্ণমান")}</th>
-                <th className="px-4 py-2.5 text-center">{t("Obtained", "প্রাপ্ত")}</th>
-                <th className="px-4 py-2.5 text-center">{t("Grade", "গ্রেড")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {RESULTS.map((r) => (
-                <tr key={r.subjectEn} className="border-t border-line">
-                  <td className="px-4 py-2.5 font-medium">{t(r.subjectEn, r.subjectBn)}</td>
-                  <td className="px-4 py-2.5 text-center">{num(r.full)}</td>
-                  <td className="px-4 py-2.5 text-center">{num(r.obtained)}</td>
-                  <td className="px-4 py-2.5 text-center font-semibold text-green-dark">{r.grade}</td>
+
+        {data && data.results.length === 0 ? (
+          <p className="p-8 text-center text-sm text-muted-ink">
+            {t("No results published yet.", "এখনো কোনো ফলাফল প্রকাশিত হয়নি।")}
+          </p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-secondary text-left text-xs uppercase tracking-wide text-muted-ink">
+                  <th className="px-4 py-2.5">{t("Subject", "বিষয়")}</th>
+                  <th className="px-4 py-2.5 text-center">{t("Full", "পূর্ণমান")}</th>
+                  <th className="px-4 py-2.5 text-center">{t("Obtained", "প্রাপ্ত")}</th>
+                  <th className="px-4 py-2.5 text-center">{t("Grade", "গ্রেড")}</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {data
+                  ? data.results.map((r, i) => (
+                      <tr key={i} className="border-t border-line">
+                        <td className="px-4 py-2.5 font-medium">{r.subject}</td>
+                        <td className="px-4 py-2.5 text-center">{num(r.full)}</td>
+                        <td className="px-4 py-2.5 text-center">{r.obtained != null ? num(r.obtained) : "—"}</td>
+                        <td className="px-4 py-2.5 text-center font-semibold text-green-dark">{r.grade ?? "—"}</td>
+                      </tr>
+                    ))
+                  : DEMO_RESULTS.map((r) => (
+                      <tr key={r.subjectEn} className="border-t border-line">
+                        <td className="px-4 py-2.5 font-medium">{t(r.subjectEn, r.subjectBn)}</td>
+                        <td className="px-4 py-2.5 text-center">{num(r.full)}</td>
+                        <td className="px-4 py-2.5 text-center">{num(r.obtained)}</td>
+                        <td className="px-4 py-2.5 text-center font-semibold text-green-dark">{r.grade}</td>
+                      </tr>
+                    ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </section>
 
       {/* Attendance */}
@@ -94,7 +139,7 @@ export function StudentPortal({ name, username }: { name: string; username: stri
         </p>
       </section>
 
-      {/* Fees */}
+      {/* Fees (demo until the Finance module is wired) */}
       <section id="fees" className="scroll-mt-20 overflow-hidden rounded-lg border border-line bg-white">
         <div className="border-b border-line px-4 py-3">
           <h2 className="text-[15px] font-semibold text-ink">{t("Fees", "ফি")}</h2>
@@ -105,19 +150,25 @@ export function StudentPortal({ name, username }: { name: string; username: stri
           <FeeSummary label={t("Outstanding", "অবশিষ্ট")} value={`৳ ${num(totalDue)}`} tone="neutral" />
         </div>
         <ul className="divide-y divide-line">
-          {FEES.map((f) => (
-            <li key={f.en} className="flex items-center justify-between gap-3 px-4 py-3">
-              <div>
-                <p className="text-sm font-medium text-ink">{t(f.en, f.bn)}</p>
-                <p className="text-xs text-muted-ink">৳ {num(f.amount)}</p>
-              </div>
-              {f.paid ? (
-                <Badge variant="green">{t("PAID", "পরিশোধিত")}</Badge>
-              ) : (
-                <Badge variant="red">{t("DUE", "বকেয়া")}</Badge>
-              )}
+          {fees.length === 0 ? (
+            <li className="px-4 py-6 text-center text-sm text-muted-ink">
+              {t("No fees recorded.", "কোনো ফি নেই।")}
             </li>
-          ))}
+          ) : (
+            fees.map((f, i) => (
+              <li key={i} className="flex items-center justify-between gap-3 px-4 py-3">
+                <div>
+                  <p className="text-sm font-medium text-ink">{t(f.en, f.bn)}</p>
+                  <p className="text-xs text-muted-ink">৳ {num(f.amount)}</p>
+                </div>
+                {f.paid ? (
+                  <Badge variant="green">{t("PAID", "পরিশোধিত")}</Badge>
+                ) : (
+                  <Badge variant="red">{t("DUE", "বকেয়া")}</Badge>
+                )}
+              </li>
+            ))
+          )}
         </ul>
       </section>
 

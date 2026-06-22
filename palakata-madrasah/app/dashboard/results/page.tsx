@@ -1,16 +1,73 @@
-import { requireRole } from "@/lib/auth-helpers";
-import { ComingSoon } from "@/components/dashboard/coming-soon";
+import type { ClassLevel, Term } from "@prisma/client";
+import { requireRole, STAFF_ROLES } from "@/lib/auth-helpers";
+import { prisma } from "@/lib/db";
+import { ResultEntry, type Selection } from "@/components/dashboard/result-entry";
 
 export const dynamic = "force-dynamic";
 
-export default async function ResultsPage() {
-  await requireRole(["ADMIN", "PRINCIPAL", "TEACHER"]);
+interface SP {
+  class?: string;
+  section?: string;
+  term?: string;
+  year?: string;
+  subject?: string;
+  fullMarks?: string;
+}
+
+export default async function ResultsPage({ searchParams }: { searchParams: Promise<SP> }) {
+  await requireRole(STAFF_ROLES);
+  const sp = await searchParams;
+
+  const selection: Selection = {
+    classLevel: sp.class ?? "",
+    section: sp.section ?? "",
+    term: sp.term ?? "",
+    year: sp.year ?? "",
+    subject: sp.subject ?? "",
+    fullMarks: sp.fullMarks ?? "100",
+  };
+
+  const ready = Boolean(sp.class && sp.term && sp.year && sp.subject);
+  let students: { id: string; rollNumber: string; nameEn: string; nameBn: string }[] = [];
+  let existing: Record<string, number> = {};
+  let dbError = false;
+
+  if (ready) {
+    try {
+      students = await prisma.student.findMany({
+        where: {
+          classLevel: sp.class as ClassLevel,
+          isActive: true,
+          ...(sp.section ? { section: sp.section } : {}),
+        },
+        orderBy: { rollNumber: "asc" },
+        select: { id: true, rollNumber: true, nameEn: true, nameBn: true },
+      });
+
+      const prior = await prisma.result.findMany({
+        where: {
+          studentId: { in: students.map((s) => s.id) },
+          term: sp.term as Term,
+          year: Number(sp.year),
+          subject: sp.subject,
+        },
+        select: { studentId: true, obtainedMarks: true },
+      });
+      existing = Object.fromEntries(
+        prior.filter((p) => p.obtainedMarks != null).map((p) => [p.studentId, p.obtainedMarks as number])
+      );
+    } catch {
+      dbError = true;
+    }
+  }
+
   return (
-    <ComingSoon
-      titleEn="Result Entry"
-      titleBn="ফলাফল এন্ট্রি"
-      descEn="Bulk result entry (class → section → term → year → subject) with auto grade & GPA calculation is the next module to wire up. The grading helper (lib/grade.ts) and Result schema are ready."
-      descBn="শ্রেণি → শাখা → টার্ম → বছর → বিষয় অনুযায়ী বাল্ক ফলাফল এন্ট্রি ও স্বয়ংক্রিয় গ্রেড/জিপিএ গণনা পরবর্তী মডিউল। গ্রেডিং হেল্পার ও Result স্কিমা প্রস্তুত।"
+    <ResultEntry
+      selection={selection}
+      students={students}
+      existing={existing}
+      ready={ready}
+      dbError={dbError}
     />
   );
 }

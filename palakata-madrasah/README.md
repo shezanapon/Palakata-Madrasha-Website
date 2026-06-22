@@ -100,14 +100,19 @@ can log in immediately with their roll number + the password the admin set.
 - Role-aware dashboard shell with real routes + active state; admin overview; student portal.
 - **Students CRUD** (`/dashboard/students`) — add class-wise, filter by class, enable/disable,
   reset password — DB-backed server actions (`lib/actions/students.ts`).
+- **Result entry** (`/dashboard/results`) — pick class/section/term/year/subject, enter marks per
+  student with **live grade & GPA** (auto via `lib/grade.ts`); saved results show **instantly in the
+  student portal**.
+- **Finance** (`/dashboard/finance`) — look up a student by roll, add fees (monthly/admission/exam/
+  other), mark Paid/Due, see paid vs due totals; reflected in the student portal.
 - **Notices CRUD** (`/dashboard/notices`) — create / publish / pin / delete — server actions.
+- **Student portal** shows the student's **real results, GPA and fees** from the DB (demo fallback
+  when no record/DB).
 - Public **Notice & Events** pages read from the DB (`lib/queries.ts`) with sample-data fallback.
 - Grade/GPA helper (`lib/grade.ts`), class/term/fee constants (`lib/constants.ts`).
 - Prisma schema (all models), R2 upload + sharp compression, public result API.
 
 **Stubbed / next steps** (route + schema + helpers exist; pages show a "next module" card)
-- `/dashboard/results` — bulk result entry (auto grade/GPA via `lib/grade.ts`).
-- `/dashboard/finance` — add fees, mark paid/due, history.
 - `/dashboard/events`, `/gallery`, `/teachers` — CRUD (same pattern as Notices/Students).
 - `/dashboard/users` — staff accounts with one-time generated passwords + role rules.
 - `/dashboard/settings` — edit institution details (currently in `lib/site.ts`).
