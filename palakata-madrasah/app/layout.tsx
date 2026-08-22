@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { LanguageProvider } from "@/components/i18n/language-provider";
+import { RouteProgress } from "@/components/ui/route-progress";
 
 export const metadata: Metadata = {
   title: {
@@ -56,7 +57,10 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: noFlashLangScript }} />
       </head>
       <body className="flex min-h-full flex-col antialiased" suppressHydrationWarning>
-        <LanguageProvider>{children}</LanguageProvider>
+        <LanguageProvider>
+          <RouteProgress />
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );
