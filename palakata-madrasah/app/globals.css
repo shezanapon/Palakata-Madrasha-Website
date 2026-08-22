@@ -5,11 +5,84 @@
 
 /* ============================================================
    PALAKATA ALIM MADRASAH — Design System (Tailwind v4)
-   Palette + fonts derived from the project wireframe.
+   ------------------------------------------------------------
+   Two token layers, deliberately kept separate:
+
+   @theme         static design tokens that never change per theme
+                  (brand ramp, radii, elevation). Literal values.
+   :root / .dark  semantic tokens that DO change per theme, mirrored
+                  into utilities by the @theme inline block below.
+
+   The legacy brand ramp (--green-dark, --gold, --orange …) is still
+   live and still carries its ORIGINAL values. 297 call sites across
+   33 files depend on pairings like `bg-green-dark text-white`, so
+   recolouring it here would make white text invisible site-wide.
+   Components migrate onto the new ramp phase by phase; the legacy
+   block is deleted once the last call site is gone.
    ============================================================ */
 
+/* ---------- Redesign ramp ----------
+   `static` so every token is emitted as a CSS custom property even
+   before a utility consumes it. Tailwind v4 tree-shakes plain @theme,
+   which would leave var(--color-brand-600) undefined in hand-written
+   CSS (the hero glow, the .eyebrow language gate) and hide the ramp
+   from devtools. */
+@theme static {
+  /* Brand green.
+     brand-200 is the DARKEST FILL permitted on the public site.
+     600/700 are button fills only; 800/900 are text only. */
+  --color-brand-50: #ecf7f1;
+  --color-brand-100: #d3ede0;
+  --color-brand-200: #a8dcc3;
+  --color-brand-300: #74c5a0;
+  --color-brand-400: #43a87d;
+  --color-brand-500: #1f8a61;
+  --color-brand-600: #12704e;
+  --color-brand-700: #0d583e;
+  --color-brand-800: #0a4531;
+  --color-brand-900: #072f22;
+
+  /* Sand — tints and text only, never a button fill. */
+  --color-sand-50: #fbf5e7;
+  --color-sand-100: #f5e8c8;
+  --color-sand-200: #ebd293;
+  --color-sand-600: #a87c1e;
+  --color-sand-800: #6b4e10;
+
+  /* Surfaces */
+  --color-canvas: #f6f9f7;
+  --color-surface: #ffffff;
+  --color-surface-soft: #ecf7f1;
+  --color-surface-band: #e4f2ea;
+  --color-line-strong: #cfe0d7;
+
+  /* Text. Never the same hue as the surface it sits on. */
+  --color-heading: #0b1a14;
+  --color-body: #33423b;
+  --color-subtle: #56655d;
+  --color-link: #0a5539;
+  --color-on-sand: #4a340a;
+
+  /* Radii */
+  --radius-card: 16px;
+  --radius-btn: 10px;
+  --radius-chip: 8px;
+  --radius-hero: 24px;
+
+  /* Elevation — green-tinted, never neutral grey */
+  --shadow-e1: 0 1px 2px rgba(10, 40, 28, 0.05);
+  --shadow-e2:
+    0 2px 6px -1px rgba(10, 40, 28, 0.07), 0 1px 3px -1px rgba(10, 40, 28, 0.05);
+  --shadow-e3:
+    0 10px 24px -8px rgba(10, 40, 28, 0.12), 0 3px 8px -3px rgba(10, 40, 28, 0.06);
+  --shadow-e4:
+    0 24px 48px -16px rgba(10, 40, 28, 0.16), 0 6px 14px -6px rgba(10, 40, 28, 0.07);
+}
+
 :root {
-  /* Brand palette */
+  /* ---------- Legacy brand palette — ORIGINAL VALUES, do not edit ----------
+     Retained so existing pages keep rendering during the migration.
+     Deleted in the final phase. */
   --green-dark: #0f3a2e;
   --green-mid: #155441;
   --green-accent: #1f6b54;
@@ -21,36 +94,63 @@
   --paper: #ffffff;
   --ink: #1f2937;
   --muted-ink: #6b7280;
-  --line: #e5e7eb;
   --notice-blue: #e8f4fa;
   --pattern-blue: #dbe7f0;
   --page-bg: #f3f7fb;
 
-  /* shadcn/ui semantic tokens (light) */
+  /* Hairline retargeted to the new palette — both values are light
+     neutral rules, so the 33 `border-line` call sites are unaffected
+     visually while already speaking the new language. */
+  --line: #e3eae5;
+
+  /* ---------- shadcn semantic tokens (light) — remapped to the new ramp ---------- */
   --radius: 0.5rem;
-  --background: #f3f7fb;
-  --foreground: #1f2937;
-  --card: #ffffff;
-  --card-foreground: #1f2937;
-  --popover: #ffffff;
-  --popover-foreground: #1f2937;
-  --primary: #0f3a2e;
+  --background: #f6f9f7; /* canvas */
+  --foreground: #0b1a14; /* heading */
+  --card: #ffffff; /* surface */
+  --card-foreground: #0b1a14; /* heading */
+  --popover: #ffffff; /* surface */
+  --popover-foreground: #0b1a14; /* heading */
+  --primary: #12704e; /* brand-600 */
   --primary-foreground: #ffffff;
-  --secondary: #eef3f8;
-  --secondary-foreground: #0f3a2e;
-  --muted: #eef3f8;
-  --muted-foreground: #6b7280;
-  --accent: #f1f5f9;
-  --accent-foreground: #0f3a2e;
-  --destructive: #dc2626;
+  --secondary: #ecf7f1; /* brand-50 */
+  --secondary-foreground: #0a4531; /* brand-800 */
+  --muted: #eff4f1;
+  --muted-foreground: #56655d; /* subtle */
+  --accent: #fbf5e7; /* sand-50 */
+  --accent-foreground: #4a340a; /* on-sand */
+  --destructive: #b42318;
   --destructive-foreground: #ffffff;
-  --border: #e5e7eb;
-  --input: #e5e7eb;
-  --ring: #155441;
+  --border: #e3eae5; /* line */
+  --input: #e3eae5; /* line */
+  --ring: #43a87d; /* brand-400 */
+}
+
+/* Dashboard-only. The public site must never render a .dark surface. */
+.dark {
+  --background: #071913;
+  --foreground: #ecf7f1;
+  --card: #0a2019;
+  --card-foreground: #ecf7f1;
+  --popover: #0a2019;
+  --popover-foreground: #ecf7f1;
+  --primary: #43a87d;
+  --primary-foreground: #072f22;
+  --secondary: #0f2c22;
+  --secondary-foreground: #d3ede0;
+  --muted: #0f2c22;
+  --muted-foreground: #a8b8b0;
+  --accent: #1a2c1f;
+  --accent-foreground: #f5e8c8;
+  --destructive: #f04438;
+  --destructive-foreground: #ffffff;
+  --border: #1b3a2e;
+  --input: #1b3a2e;
+  --ring: #43a87d;
 }
 
 @theme inline {
-  /* Brand colors → utilities like bg-green-dark, text-gold, border-line */
+  /* Legacy brand colors → utilities like bg-green-dark, text-gold, border-line */
   --color-green-dark: var(--green-dark);
   --color-green-mid: var(--green-mid);
   --color-green-accent: var(--green-accent);
