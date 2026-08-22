@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ImageIcon } from "lucide-react";
 import { useLang } from "@/components/i18n/language-provider";
 import { heroSlides } from "@/lib/sample-data";
 import { site } from "@/lib/site";
@@ -15,7 +14,7 @@ const GRADIENTS = [
 ];
 
 export function HeroSlider() {
-  const { t } = useLang();
+  const { t, num } = useLang();
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -26,7 +25,7 @@ export function HeroSlider() {
   return (
     <div className="overflow-hidden rounded-lg border border-line bg-white shadow-sm">
       <div className="relative aspect-video">
-        {heroSlides.map((slide, i) => (
+        {heroSlides.map((_, i) => (
           <div
             key={i}
             className={cn(
@@ -39,11 +38,8 @@ export function HeroSlider() {
             <div className="px-6 text-center text-white">
               <div className="inline-block rounded-md border border-gold/40 bg-black/35 px-6 py-3.5 backdrop-blur-[2px]">
                 <p className="font-bangla text-xl font-bold sm:text-2xl">{site.name.bn}</p>
-                <p className="font-display text-xs tracking-widest sm:text-sm">{site.name.en}</p>
+                <p className="font-institution text-chip">{site.name.en}</p>
               </div>
-              <p className="mt-4 inline-flex items-center gap-1.5 text-[13px] italic tracking-wide text-[#e3dab9]">
-                <ImageIcon className="size-3.5" strokeWidth={1.5} />[ {t(slide.caption.en, slide.caption.bn)} ]
-              </p>
             </div>
           </div>
         ))}
@@ -55,7 +51,7 @@ export function HeroSlider() {
             key={i}
             type="button"
             onClick={() => setIndex(i)}
-            aria-label={`Slide ${i + 1}`}
+            aria-label={t(`Slide ${i + 1}`, `স্লাইড ${num(i + 1)}`)}
             className={cn(
               "h-2 rounded-full transition-all",
               i === index ? "w-6 bg-orange" : "w-2 bg-line hover:bg-muted-ink"

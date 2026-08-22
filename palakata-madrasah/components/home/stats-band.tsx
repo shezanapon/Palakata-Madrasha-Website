@@ -14,11 +14,11 @@ export function StatsBand() {
             key={s.label.en}
             className="text-center lg:border-r lg:border-gold/20 lg:last:border-r-0"
           >
-            <div className="font-display text-4xl font-bold leading-none text-gold sm:text-[42px]">
+            <div className="font-display text-h1 leading-none text-gold">
               {num(s.value)}
               {s.suffix ?? ""}
             </div>
-            <div className="mt-1.5 text-[13px] uppercase tracking-wider text-[#dbeae4]">
+            <div className="mt-1.5 text-ui text-[#dbeae4]">
               {t(s.label.en, s.label.bn)}
             </div>
           </div>

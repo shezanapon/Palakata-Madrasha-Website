@@ -69,6 +69,49 @@
   --radius-chip: 8px;
   --radius-hero: 24px;
 
+  /* ---------- Type scale ----------
+     Fluid via clamp(): each token hits its mobile size at 375px and its
+     desktop size at 1280px, so there are no responsive overrides to keep
+     in sync. Weight and leading travel with the size.
+
+     Names avoid the --color-* namespace on purpose: Tailwind resolves
+     `text-*` against --text-* BEFORE --color-*, so a --text-body token
+     would shadow the text-body colour utility. Hence copy/ui/note/chip
+     rather than body/link/subtle, and h4 rather than card.
+
+     Nothing here is below 14px — that is the floor for the whole site. */
+  --text-h1: clamp(1.75rem, 1.4394rem + 1.326vw, 2.5rem); /* 28 → 40 */
+  --text-h1--line-height: 1.2;
+  --text-h1--font-weight: 700;
+
+  --text-h2: clamp(1.5rem, 1.2928rem + 0.884vw, 2rem); /* 24 → 32 */
+  --text-h2--line-height: 1.25;
+  --text-h2--font-weight: 700;
+
+  --text-h3: clamp(1.25rem, 1.1982rem + 0.221vw, 1.375rem); /* 20 → 22 */
+  --text-h3--line-height: 1.35;
+  --text-h3--font-weight: 600;
+
+  --text-h4: 1.125rem; /* 18 — card titles */
+  --text-h4--line-height: 1.45;
+  --text-h4--font-weight: 600;
+
+  --text-copy: clamp(1rem, 0.9741rem + 0.1105vw, 1.0625rem); /* 16 → 17 body */
+  --text-copy--line-height: 1.85;
+  --text-copy--font-weight: 500;
+
+  --text-ui: 1rem; /* 16 — nav, links, buttons */
+  --text-ui--line-height: 1.5;
+  --text-ui--font-weight: 600;
+
+  --text-note: 0.9375rem; /* 15 — captions */
+  --text-note--line-height: 1.7;
+  --text-note--font-weight: 500;
+
+  --text-chip: 0.875rem; /* 14 — chips, dates. FLOOR. */
+  --text-chip--line-height: 1.4;
+  --text-chip--font-weight: 600;
+
   /* Elevation — green-tinted, never neutral grey */
   --shadow-e1: 0 1px 2px rgba(10, 40, 28, 0.05);
   --shadow-e2:
@@ -197,6 +240,11 @@
   --font-display: "Cinzel", serif;
   --font-bangla: "Hind Siliguri", sans-serif;
   --font-arabic: "Noto Naskh Arabic", "Amiri", serif;
+  /* Bengali headings. Hind Siliguri's matra strokes thin out at display
+     sizes; Noto Serif Bengali holds the horizontal bar. */
+  --font-bangla-serif: "Noto Serif Bengali", "Hind Siliguri", serif;
+  /* Cinzel is now scoped to the English institution name alone. */
+  --font-institution: "Cinzel", serif;
 
   /* Notice ticker animation */
   --animate-ticker: ticker 35s linear infinite;
@@ -223,7 +271,12 @@
     @apply text-foreground;
     min-height: 100%;
     font-family: var(--font-sans);
-    line-height: 1.6;
+    /* 17px / 1.85 / 500. Bengali needs the extra leading for matra and
+       descenders, and the extra weight because Hind Siliguri 400 goes
+       thin against tinted surfaces. */
+    font-size: var(--text-copy);
+    font-weight: 500;
+    line-height: 1.85;
     background-color: var(--page-bg);
     /* Subtle Islamic geometric pattern (light) — from wireframe */
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='none' stroke='%23c7d6e3' stroke-width='0.8' opacity='0.55'%3E%3Cpath d='M30 8 L30 52 M8 30 L52 30 M15 15 L45 45 M45 15 L15 45'/%3E%3Ccircle cx='30' cy='30' r='3'/%3E%3Cpath d='M30 12 L32 18 L30 16 L28 18 Z M30 48 L32 42 L30 44 L28 42 Z M12 30 L18 32 L16 30 L18 28 Z M48 30 L42 32 L44 30 L42 28 Z'/%3E%3C/g%3E%3C/svg%3E");
@@ -233,17 +286,45 @@
   html[data-lang="bn"] body {
     font-family: var(--font-bangla);
   }
+
+  /* Semantic headings pick up the serif Bengali face automatically. */
+  html[data-lang="bn"] :is(h1, h2, h3, h4) {
+    font-family: var(--font-bangla-serif);
+  }
 }
 
 @layer utilities {
+  /* Cinzel is an inscriptional face and fights the light direction, so
+     .font-display now resolves to Inter (Hind Siliguri in Bengali).
+     The class is kept — 20+ call sites depend on it — but restyled.
+     Cinzel survives only via .font-institution below. */
   .font-display {
-    font-family: var(--font-display);
-    letter-spacing: 0.02em;
-  }
-  html[data-lang="bn"] .font-display {
-    font-family: var(--font-bangla);
+    font-family: var(--font-sans);
     letter-spacing: 0;
   }
+  html[data-lang="bn"] .font-display {
+    font-family: var(--font-bangla-serif);
+    letter-spacing: 0;
+  }
+
+  /* The English institution name, and nothing else. */
+  .font-institution {
+    font-family: var(--font-institution);
+    letter-spacing: 0.02em;
+  }
+  html[data-lang="bn"] .font-institution {
+    font-family: var(--font-bangla-serif);
+    letter-spacing: 0;
+  }
+
+  /* Non-semantic headings (a <p> or <div> styled as one). */
+  .font-heading {
+    font-family: var(--font-sans);
+  }
+  html[data-lang="bn"] .font-heading {
+    font-family: var(--font-bangla-serif);
+  }
+
   .font-bangla {
     font-family: var(--font-bangla);
   }
@@ -251,6 +332,32 @@
     font-family: var(--font-arabic);
     direction: rtl;
     font-weight: 600;
+  }
+
+  /* Eyebrow / kicker.
+     THE BENGALI TRAP: letter-spacing splits conjunct clusters and
+     text-transform is meaningless in Bengali, which is unicameral. Both
+     are gated to English. Keys off data-lang, which the language
+     provider sets alongside lang — matching the convention already used
+     above for body and .font-display. */
+  .eyebrow {
+    font-size: var(--text-chip);
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  html[data-lang="en"] .eyebrow {
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  html[data-lang="bn"] .eyebrow {
+    letter-spacing: 0;
+    text-transform: none;
+    font-weight: 600;
+  }
+
+  /* Reading measure for prose. */
+  .measure {
+    max-width: 68ch;
   }
 
   /* Reusable Islamic geometric overlay for dark green bands */

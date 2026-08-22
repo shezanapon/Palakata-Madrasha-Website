@@ -23,10 +23,10 @@ export function Header() {
           <h1 className="font-bangla text-2xl font-bold leading-tight sm:text-3xl">
             {site.name.bn}
           </h1>
-          <p className="font-display mt-0.5 text-xl font-semibold tracking-wide sm:text-2xl md:text-[28px]">
+          <p className="font-institution mt-0.5 text-xl font-semibold sm:text-2xl md:text-[28px]">
             {site.name.en}
           </p>
-          <p className="mt-1.5 text-[12px] text-[#dbeae4]">
+          <p className="mt-1.5 text-chip text-[#dbeae4]">
             {t("EIIN", "ইআইআইএন")}: <span className="text-gold">{site.eiin}</span>
             <span className="mx-2 text-gold">·</span>
             {t("Madrasah Code", "মাদ্রাসা কোড")}: <span className="text-gold">{site.madrasahCode}</span>

@@ -47,11 +47,11 @@ export function InfoCards() {
           <li key={a.id} className="flex items-start gap-3 border-b border-dashed border-line px-5 py-2.5 last:border-b-0">
             <span className="flex size-11 shrink-0 flex-col items-center justify-center rounded border-l-[3px] border-orange bg-secondary text-green-dark">
               <Star className="size-3.5 text-gold" fill="currentColor" strokeWidth={0} />
-              <span className="font-display text-[11px] font-bold leading-none">
+              <span className="font-display text-chip leading-none">
                 {fmtYear(a.year, lang)}
               </span>
             </span>
-            <span className="text-[13px] leading-snug text-ink">{t(a.title.en, a.title.bn)}</span>
+            <span className="text-ui leading-snug text-ink">{t(a.title.en, a.title.bn)}</span>
           </li>
         ))}
       </InfoCard>
@@ -69,10 +69,10 @@ function DateRow({ item, lang }: { item: DatedItem; lang: Lang }) {
   return (
     <li className="flex items-start gap-3 border-b border-dashed border-line px-5 py-2.5 last:border-b-0">
       <span className="flex w-11 shrink-0 flex-col items-center rounded border-l-[3px] border-orange bg-secondary px-1 py-1.5 text-center">
-        <span className="font-display text-base font-bold leading-none text-green-dark">{day}</span>
-        <span className="mt-0.5 text-[9px] uppercase tracking-wide text-muted-ink">{month}</span>
+        <span className="font-display text-h4 font-bold leading-none text-green-dark">{day}</span>
+        <span className="mt-0.5 text-chip text-muted-ink">{month}</span>
       </span>
-      <Link href={item.href ?? "#"} className="text-[13px] leading-snug text-ink hover:text-orange">
+      <Link href={item.href ?? "#"} className="text-ui leading-snug text-ink hover:text-orange">
         {t(item.title.en, item.title.bn)}
       </Link>
     </li>
@@ -93,7 +93,7 @@ function InfoCard({
   const { t } = useLang();
   return (
     <div className="overflow-hidden rounded-lg border border-line bg-white shadow-sm">
-      <h3 className="flex items-center gap-2.5 bg-green-dark px-5 py-3 text-[15px] font-semibold text-white">
+      <h3 className="flex items-center gap-2.5 bg-green-dark px-5 py-3 text-h4 text-white">
         <span className="flex size-7 items-center justify-center rounded-full bg-gold text-green-dark">
           {icon}
         </span>
@@ -102,7 +102,7 @@ function InfoCard({
       <ul className="py-2.5">{children}</ul>
       <Link
         href={viewAllHref}
-        className="block border-t border-line bg-secondary py-2.5 text-center text-[12px] font-bold tracking-wide text-green-dark transition-colors hover:bg-green-dark hover:text-white"
+        className="block border-t border-line bg-secondary py-2.5 text-center text-ui text-green-dark transition-colors hover:bg-green-dark hover:text-white"
       >
         {t("View All →", "সব দেখুন →")}
       </Link>

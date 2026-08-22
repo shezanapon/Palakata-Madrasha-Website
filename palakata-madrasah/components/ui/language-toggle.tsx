@@ -20,7 +20,7 @@ export function LanguageToggle({ className }: { className?: string }) {
         onClick={() => setLang("en")}
         aria-pressed={lang === "en"}
         className={cn(
-          "rounded-full px-3 py-1 text-[11px] font-bold tracking-wide transition-colors",
+          "rounded-full px-3 py-1 text-chip transition-colors",
           lang === "en" ? "bg-gold text-green-dark" : "text-white hover:text-gold"
         )}
       >
@@ -31,7 +31,7 @@ export function LanguageToggle({ className }: { className?: string }) {
         onClick={() => setLang("bn")}
         aria-pressed={lang === "bn"}
         className={cn(
-          "rounded-full px-3 py-1 text-[11px] font-bold tracking-wide transition-colors",
+          "rounded-full px-3 py-1 text-chip transition-colors",
           lang === "bn" ? "bg-gold text-green-dark" : "text-white hover:text-gold"
         )}
       >

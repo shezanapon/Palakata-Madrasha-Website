@@ -8,7 +8,7 @@ export function WelcomeSection() {
 
   return (
     <section className="mt-6 rounded-lg border border-line bg-white p-6 shadow-sm sm:p-9">
-      <h2 className="font-display mb-4 inline-block border-b-2 border-gold pb-2.5 text-2xl font-semibold text-green-dark sm:text-[26px]">
+      <h2 className="font-display mb-4 inline-block border-b-2 border-gold pb-2.5 text-h2 text-green-dark">
         {t("Welcome", "স্বাগতম")}
       </h2>
 
@@ -16,7 +16,7 @@ export function WelcomeSection() {
         {t("Assalamu Alaikum Wa Rahmatullah", "আসসালামু আলাইকুম ওয়া রহমাতুল্লাহ")}
       </p>
 
-      <div className="space-y-3.5 text-[14.5px] leading-[1.85] text-[#374151]">
+      <div className="space-y-3.5 text-copy text-body measure">
         <p>
           {t(
             `Welcome to the official website of ${site.name.en}. For decades our institution has combined authentic Islamic scholarship with modern academic excellence, preparing students to serve their faith, family and nation.`,
@@ -31,7 +31,7 @@ export function WelcomeSection() {
         </p>
       </div>
 
-      <div className="mt-5 border-t border-dashed border-line pt-3.5 text-[13px] text-muted-ink">
+      <div className="mt-5 border-t border-dashed border-line pt-3.5 text-note text-muted-ink">
         <strong className="font-bold text-green-dark">
           {t(site.principal.name.en, site.principal.name.bn)}
         </strong>{" "}

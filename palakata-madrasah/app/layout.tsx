@@ -37,8 +37,20 @@ export default function RootLayout({
         )}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/*
+          Google returns unicode-range-split @font-face blocks, so the Bengali
+          subset (U+0980-09FE) downloads only when Bengali glyphs render — that
+          is the subsetting; css2 has no &subset= parameter. Kept as <link> on
+          purpose (see README) rather than next/font.
+
+          Noto Serif Bengali 600/700 → Bengali headings.
+          Hind Siliguri 400-700     → Bengali body and UI.
+          Cinzel                    → the English institution name only.
+          Inter                     → all other English UI.
+          Noto Naskh Arabic         → the Arabic calligraphy line.
+        */}
         <link
-          href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;600;700&family=Noto+Serif+Bengali:wght@600;700&display=swap"
           rel="stylesheet"
         />
         <script dangerouslySetInnerHTML={{ __html: noFlashLangScript }} />

@@ -20,7 +20,7 @@ export function MenuBar() {
             <li key={item.en} className="group relative">
               <Link
                 href={item.href ?? "#"}
-                className="flex items-center gap-1 border-b-[3px] border-transparent px-3.5 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-orange hover:text-green-dark"
+                className="flex items-center gap-1 border-b-[3px] border-transparent px-3.5 py-3.5 text-ui text-ink transition-colors hover:border-orange hover:text-green-dark"
               >
                 {t(item.en, item.bn)}
                 {item.children && (
@@ -34,7 +34,7 @@ export function MenuBar() {
                     <li key={child.en}>
                       <Link
                         href={child.href ?? "#"}
-                        className="block rounded px-3.5 py-2 text-[13px] font-medium text-ink transition-colors hover:bg-secondary hover:pl-5 hover:text-green-dark"
+                        className="block rounded px-3.5 py-2 text-ui font-medium text-ink transition-colors hover:bg-secondary hover:pl-5 hover:text-green-dark"
                       >
                         {t(child.en, child.bn)}
                       </Link>
@@ -47,7 +47,7 @@ export function MenuBar() {
         </ul>
 
         {/* Mobile toggle */}
-        <span className="py-3 text-sm font-bold text-green-dark lg:hidden">
+        <span className="py-3 text-ui text-green-dark lg:hidden">
           {t("Menu", "মেনু")}
         </span>
         <button
@@ -68,7 +68,7 @@ export function MenuBar() {
           <button
             type="button"
             onClick={() => setOpen(false)}
-            className="mb-1 ml-auto flex items-center gap-1 rounded px-2 py-1 text-xs font-semibold text-muted-ink"
+            className="mb-1 ml-auto flex items-center gap-1 rounded px-2 py-1 text-chip text-muted-ink"
           >
             <X className="size-4" /> {t("Close", "বন্ধ")}
           </button>
@@ -94,7 +94,7 @@ function MobileNavItem({ item, onNavigate }: { item: NavItem; onNavigate: () => 
         <Link
           href={item.href ?? "#"}
           onClick={onNavigate}
-          className="block flex-1 py-3 text-sm font-semibold text-ink"
+          className="block flex-1 py-3 text-ui text-ink"
         >
           {t(item.en, item.bn)}
         </Link>
@@ -118,7 +118,7 @@ function MobileNavItem({ item, onNavigate }: { item: NavItem; onNavigate: () => 
               <Link
                 href={child.href ?? "#"}
                 onClick={onNavigate}
-                className="block py-2 text-[13px] text-muted-ink hover:text-green-dark"
+                className="block py-2 text-ui font-medium text-muted-ink hover:text-green-dark"
               >
                 {t(child.en, child.bn)}
               </Link>

@@ -11,7 +11,7 @@ export function UtilityBar() {
   return (
     <div className="bg-green-dark text-white">
       <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-2 px-4 py-1.5 sm:px-6">
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-[12px]">
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-chip">
           <a
             href={`tel:${site.contact.phone.replace(/\s/g, "")}`}
             className="inline-flex items-center gap-1.5 text-white/85 transition-colors hover:text-gold"
@@ -29,7 +29,7 @@ export function UtilityBar() {
         </div>
 
         <div className="flex items-center gap-3">
-          <span className="hidden text-[11px] tracking-wide text-white/70 md:inline">
+          <span className="hidden text-chip text-white/70 md:inline">
             {t("EIIN", "ইআইআইএন")}: {site.eiin}
           </span>
           <LanguageToggle />

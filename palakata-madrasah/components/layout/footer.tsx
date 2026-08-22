@@ -32,11 +32,11 @@ export function Footer() {
         <div>
           <div className="mb-4 flex items-center gap-3.5">
             <MadrasahSeal className="size-12" />
-            <span className="font-display text-lg font-semibold leading-tight text-gold">
+            <span className="font-institution text-lg font-semibold leading-tight text-gold">
               {t(site.name.en, site.name.bn)}
             </span>
           </div>
-          <p className="text-[13px] leading-relaxed text-[#dbeae4]/90">
+          <p className="text-ui leading-relaxed text-[#dbeae4]/90">
             {t(
               "An Alim-level madrasah committed to Islamic and modern education — nurturing knowledge, faith and good character since",
               "ইসলামি ও আধুনিক শিক্ষায় নিবেদিত একটি আলিম মাদ্রাসা — জ্ঞান, ঈমান ও উত্তম চরিত্র গঠনে নিয়োজিত,"
@@ -65,27 +65,27 @@ export function Footer() {
 
         {/* Contact */}
         <FooterColumn title={t("Contact", "যোগাযোগ")}>
-          <li className="flex items-start gap-2 text-[13px]">
+          <li className="flex items-start gap-2 text-ui">
             <MapPin className="mt-0.5 size-4 shrink-0 text-gold" strokeWidth={1.5} />
             <span>{t(site.contact.address.en, site.contact.address.bn)}</span>
           </li>
-          <li className="flex items-center gap-2 text-[13px]">
+          <li className="flex items-center gap-2 text-ui">
             <Phone className="size-4 shrink-0 text-gold" strokeWidth={1.5} />
             <a href={`tel:${site.contact.phone.replace(/\s/g, "")}`} dir="ltr">
               {site.contact.phone}
             </a>
           </li>
-          <li className="flex items-center gap-2 text-[13px]">
+          <li className="flex items-center gap-2 text-ui">
             <Mail className="size-4 shrink-0 text-gold" strokeWidth={1.5} />
             <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
           </li>
-          <li className="mt-1 text-[13px] text-[#dbeae4]/80">
+          <li className="mt-1 text-ui text-[#dbeae4]/80">
             {t("EIIN", "ইআইআইএন")}: {site.eiin} · {t("Code", "কোড")}: {site.madrasahCode}
           </li>
         </FooterColumn>
       </div>
 
-      <div className="mx-auto mt-10 max-w-[1280px] border-t border-gold/15 py-4 text-center text-[12px] text-[#9bb5ad]">
+      <div className="mx-auto mt-10 max-w-[1280px] border-t border-gold/15 py-4 text-center text-ui text-[#9bb5ad]">
         © {num(new Date().getFullYear())} {t(site.name.en, site.name.bn)}.{" "}
         {t("All rights reserved.", "সর্বস্বত্ব সংরক্ষিত।")}
       </div>
@@ -96,7 +96,7 @@ export function Footer() {
 function FooterColumn({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <h4 className="font-display mb-4 border-b border-gold/25 pb-2 text-base font-semibold tracking-wide text-gold">
+      <h4 className="font-display mb-4 border-b border-gold/25 pb-2 text-ui font-bold text-gold">
         {title}
       </h4>
       <ul className="space-y-2">{children}</ul>
@@ -107,7 +107,7 @@ function FooterColumn({ title, children }: { title: string; children: React.Reac
 function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
     <li>
-      <Link href={href} className="text-[13px] text-[#dbeae4] transition-colors hover:text-gold">
+      <Link href={href} className="text-ui text-[#dbeae4] transition-colors hover:text-gold">
         {children}
       </Link>
     </li>
