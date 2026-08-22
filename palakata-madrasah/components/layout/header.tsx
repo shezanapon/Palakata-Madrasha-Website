@@ -10,7 +10,7 @@ export function Header() {
   const { t } = useLang();
 
   return (
-    <header className="pattern-overlay relative overflow-hidden border-b-[3px] border-gold bg-gradient-to-b from-green-dark to-green-mid text-white">
+    <header className="relative overflow-hidden border-b-[3px] border-gold bg-gradient-to-b from-green-dark to-green-mid text-white">
       <div className="relative z-[1] mx-auto grid max-w-[1280px] grid-cols-1 items-center gap-5 px-4 py-4 text-center sm:px-6 md:grid-cols-[auto_1fr] md:gap-7 md:text-left lg:grid-cols-[auto_1fr_auto]">
         <Link href="/" aria-label={t(site.name.en, site.name.bn)} className="mx-auto md:mx-0">
           <MadrasahSeal className="size-[88px] drop-shadow-md md:size-[104px]" />

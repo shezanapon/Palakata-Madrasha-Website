@@ -7,8 +7,8 @@ export function StatsBand() {
   const { t, num } = useLang();
 
   return (
-    <section className="pattern-overlay relative my-6 overflow-hidden bg-gradient-to-br from-green-dark to-green-mid px-4 py-9 text-white sm:px-6">
-      <div className="relative z-[1] mx-auto grid max-w-[1280px] grid-cols-2 gap-7 lg:grid-cols-4">
+    <section className="relative overflow-hidden bg-gradient-to-br from-green-dark to-green-mid py-12 text-white lg:py-22">
+      <div className="relative z-[1] mx-auto grid max-w-page grid-cols-2 gap-8 px-6 lg:grid-cols-4">
         {stats.map((s) => (
           <div
             key={s.label.en}

@@ -26,8 +26,8 @@ export function Footer() {
   const { t, num } = useLang();
 
   return (
-    <footer className="mt-10 border-t-[3px] border-gold bg-green-dark px-4 pt-12 text-[#dbeae4] sm:px-6">
-      <div className="mx-auto grid max-w-[1280px] gap-9 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
+    <footer className="pattern-overlay relative overflow-hidden border-t-[3px] border-sand-200 bg-green-dark pt-12 text-[#dbeae4]">
+      <div className="relative z-[1] mx-auto grid max-w-page gap-8 px-6 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
         {/* Brand */}
         <div>
           <div className="mb-4 flex items-center gap-3.5">
@@ -85,7 +85,7 @@ export function Footer() {
         </FooterColumn>
       </div>
 
-      <div className="mx-auto mt-10 max-w-[1280px] border-t border-gold/15 py-4 text-center text-ui text-[#9bb5ad]">
+      <div className="relative z-[1] mx-auto mt-10 max-w-page border-t border-gold/15 px-6 py-4 text-center text-ui text-[#9bb5ad]">
         © {num(new Date().getFullYear())} {t(site.name.en, site.name.bn)}.{" "}
         {t("All rights reserved.", "সর্বস্বত্ব সংরক্ষিত।")}
       </div>

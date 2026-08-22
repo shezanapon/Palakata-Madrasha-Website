@@ -17,7 +17,7 @@ export function InfoCards() {
   const { t, lang } = useLang();
 
   return (
-    <section className="mx-auto my-6 grid max-w-[1280px] gap-5 px-4 sm:px-6 md:grid-cols-2 lg:grid-cols-3">
+    <div className="mx-auto grid max-w-page gap-8 px-6 md:grid-cols-2 lg:grid-cols-3">
       <InfoCard
         icon={<Bell className="size-3.5" strokeWidth={2} />}
         title={t("Latest Notices", "সর্বশেষ নোটিশ")}
@@ -55,7 +55,7 @@ export function InfoCards() {
           </li>
         ))}
       </InfoCard>
-    </section>
+    </div>
   );
 }
 
